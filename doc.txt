@@ -1,0 +1,935 @@
+autherization:
+-----------------------------------
+
+signup:- 
+
+URL/signup                  
+
+request:
+
+PUT
+
+body:json
+{
+    email:String,                                'should be uniq'
+    password:String,
+    comfirmPassword:String,
+    name:String,
+    mobile:String                                'should be uniq'
+}
+
+res:
+{
+    "message": "user created",
+    "userId": "5e9c9a4bbdcb3833b90b4452"
+}
+______________________________________________________
+
+login:- 
+
+URL/login                  
+
+request:
+
+POST
+
+body:json
+{
+    emailOrPhone:String,
+    password:String,
+    FCM:String
+}
+
+res:
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJ1c2VySWQiOiI1ZTlhMzkxYTVlNTBmZjFiYTcxMzgyNjciLCJpYXQiOjE1ODczMjE2NTcsImV4cCI6MTU4NzMyNTI1N30.trWkXWUJcOosL2kjd_jtlPRkmkjVTtrV97s8KbvH_eY",
+    "userId": "5e9a391a5e50ff1ba7138267"
+}
+
+
+______________________________________________________
+
+logout:- 
+
+URL/logout                  
+
+request:
+
+POST
+
+body:json
+{
+    FCM:String
+}
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+{
+    state: 1 
+    message:'FCM deleted'
+}
+
+
+
+__________________________________________________________
+
+shop:-
+------------------
+add Product:- 
+
+URL/shop/addProduct                  
+
+request:
+
+PUT
+
+body:json
+{
+   helth:String,
+   amount:String,
+   color:String,
+   age:String,
+   desc:String,
+   catigory:ID,
+   image:File,
+   production:String,
+   size:String,
+   sex:String,
+   adress:String,
+   city:String     
+}
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+{
+    message:'product created Sucessfullt',
+    product:savedProduct                   "have all products data"
+}
+
+______________________________________________________
+
+getProducts
+
+URL/shop/getProducts/<catigoryId>?page=<page>&filter=<filter type>                   '"catigoryId" is the id of the catigory u want to show it's products'                  
+                                                                                    'page' is the page u want to show 
+                                                                                    every page have 10 products  
+                                                                        filter = '1'       //for no filter option
+                                                                        filter = 'date'    //for date filter option
+                                                                        filter = 'bids'    //for sorting by top bids filter
+                                                                        filter = 'any city'//filter with city 
+                                                                        (will give u only value of 'any city')
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+{
+   products:products,          array of products have at most 10 product 
+   totalItems:totalProducts 
+}
+
+______________________________________________________________________________
+
+get Catigory
+
+URL/shop/getCatigory                   
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+{
+  catigories:catigories                  "array of catigories" 
+}
+_________________________________________________________________________________
+
+
+get Single Product
+
+URL/shop/getSingleProduct/:id                    "id is the product id u want to view"
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+{
+           TotalPid:Number,
+           _id:ID,
+           imageUrl:String,           'image Path'
+           helth:String,
+           amount:Number,
+           color:String,
+           age:String,
+           desc:String,
+           catigory:String,
+           creator:String,           'creator name'
+           creatorId:ID,
+           createdAt:Date                  
+
+           *and the data after edit in db*         <<==
+}
+______________________________________________________________________________
+get Single ask for Product
+
+URL/shop/SingleAskProduct/:id                    "id is the product id u want to view"
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+{
+           TotalPid:Number,
+           _id:ID,          
+           helth:String,
+           amount:Number,
+           color:String,
+           age:String,
+           desc:String,
+           catigory:String,
+           creator:String,           'creator name'
+           creatorId:ID,
+           createdAt:Date                  
+
+           *and the data after edit in db*         <<==
+}
+______________________________________________________________________________
+
+get Single ask for Product bid
+
+URL/shop/SingleAskProduct/bid/<prodId>/<bidId>                    
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+{
+           bid:bid
+}
+______________________________________________________________________________
+
+
+PUT Pid
+
+URL/shop/putPid                    
+
+request:
+
+PUT
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+body:json
+{
+   prodId:ID,
+   bidVal:Number                                  
+}
+
+res:
+{
+    "state": 1,
+    "productTotalPid": 1301505,              
+    "productId": "5eaa28bb5e46da5198fa3757",
+    "userId": "5eaa28375e46da5198fa3756",
+    "userName": "mohamed gamal",
+    "from": 1301005,
+    "to": 1301505          
+}       
+
+socket.io res:
+'products',{
+            action:'creat',
+            productTotalPid:1301505,
+            productId:5eaa28bb5e46da5198fa3757,
+            creator:{
+                _id: 5eaa28375e46da5198fa3756,
+                name:mohamed gamal
+                }
+            }
+
+    ______________________________________________________
+
+
+    put ask for product
+
+URL/shop/putAskProduct                 
+
+request:
+
+PUT
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+body:json
+{
+    desc:String
+    catigory:id
+    lat:Number
+    lng:Number
+    age:String
+    sex:String
+    color:String
+    amount:Number
+    helth:String
+    size:String
+    production:String
+    adress:String                                
+}
+
+res:
+{
+          state:1 || 0 ,
+          askProduct:askProduct
+}
+
+__________________________________________________________________________
+
+
+get ask for product
+
+URL/shop/getAskProduct/<catigoryId>/?page=<page>&filter=<filter type>
+
+                                                                    filter = '1'       //for no filter option
+                                                                    filter = 'date'    //for date filter option
+                                                                    filter = 'any city'//filter with 'any city'             
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+
+res:
+{
+          state:1 || 0 ,
+          [askProduct:askProduct],
+          totalItems:total
+}
+ 
+_______________________________________________________________________________________
+
+put ask for product
+
+URL/shop/putAskProductBid            
+
+request:
+
+PUT
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+body
+{
+    askProductId:id
+    image:file
+    helth:String
+    adress:String
+    amount:Number
+    price:Number
+    color:String
+    age:String
+    desc:String
+    adress:String
+    city:String
+}
+
+res:
+{
+        state:1 || 0 ,
+        askProduct:finalProd                         "the main product whitch the user want(with the new bid)"
+}
+
+
+socket.io :
+('askProducts',
+    {
+        action:'creat',
+        productAfterBid:productAfterBid,                 "the main product whitch the user want(with the new bid)"
+        creator:{_id: user._id,name:user.name}           "who did the bid"
+})
+
+
+____________________________________________________________________________________________________________________________
+_______________________________________________________________________________________
+
+post restart bid
+
+URL/shop/bid/restart         
+
+request:
+
+POST
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+body
+{
+    productId:id
+}
+
+res:
+{
+        state:1 ,
+        message:restarted
+        
+}
+
+
+____________________________________________________________________________________________________________________________
+
+User:--
+
+
+post fevorite product of ask for product
+
+URL/user/fev/<action>/<id>                  action=1 'for product' // action=2 for ask for product           
+
+request:
+
+POST
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+{
+    state:1,
+    message:"product added to fev successfully!!"
+    }
+
+
+______________________________________________________________________________
+
+
+User:--
+
+
+delete fevorite product of ask for product
+
+URL/user/deleteFev/<action>/<id>                 action=1 'for product' // action=2 for ask for product           
+
+request:
+
+DELETE
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+{
+    state:1,
+    message:"product fev deleted successfully!!"
+    }
+
+_______________________________________________________________________________________
+
+get profile
+
+URL/user/profile/<id>               userId         
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+
+    {
+        state:1,
+        profileState:'visitor'||'owner',
+        user:user                            ///only name,phone and email
+        }
+____________________________________________________________________________________________________________________________
+get user bids
+
+URL/user/myBids?page=<pageNumber>                  
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+
+{
+    state:1,
+    myBeds:bids,                 //10 per page 
+    totalBids:totalBids          //total bids the user have 
+    }
+_______________________________________________________________________________________
+
+get user products
+
+URL/user/myProducts?page=<pageNumber>                  
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+
+{
+    state:1,
+    myProducts:products,               
+    totalProducts:totalBids 
+    }
+_______________________________________________________________________________________
+
+
+get user ask for products
+
+URL/user/myAskProducts?page=<pageNumber>                  
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+
+{
+    state:1,
+    myProducts:askProduct,
+    totalProducts:totalAskProduct
+    }
+_______________________________________________________________________________________
+
+
+
+
+get user fevorite
+
+URL/user/fev?page=<pageNumber>                  
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+
+{
+    state:1,
+    myFevProducts:userProducts,
+    totalProducts:totalFevProducts
+}
+_______________________________________________________________________________________
+
+
+put edit profile
+
+URL/user/editProfile                       
+                                            "notice that put edit profile should be visible only to the owner"
+request:
+
+PUT
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+body:{
+    name:String,
+    email:String,
+    mobile:String                                 //all reqired with the new or the old data
+}
+res:
+
+    {
+        state:1,
+        user:newUser                    //all user data 
+        }
+
+_________________________________________________________________________________________
+
+post forget password
+
+URL/forgetPassword                       
+                                            
+request:
+
+POST
+
+
+body:{
+    email:String
+}
+res:
+
+    {
+      state:1,
+      message:'code sent sucssefully!!',
+      token:token      
+    }
+_________________________________________________________________
+
+post verfy Code
+
+URL/verfyCode                       
+                                            
+request:
+
+POST
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+body:{
+    code:String
+}
+res:
+
+    {
+     state:1,
+     message:'true code'     
+    }
+
+    ________________________________________________________________
+
+    put forget Password
+
+URL/forgetPassword                       
+                                            
+request:
+
+PUT
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+body:{
+    password:String,
+    comfirmPassword:String
+}
+res:
+
+    {
+     state:1,
+     message:"password Changed."     
+    }
+
+    _______________________________________________________________________________________
+
+support:
+
+        put support contact us
+
+URL/support                       
+                                            
+request:
+
+PUT
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+body:{
+    message:String
+}
+res:
+
+    {
+     state:1,
+     message:message     
+    }
+
+      _______________________________________________________________________________________
+
+        get f&Q
+
+URL/support/FaQ                      
+                                            
+request:
+
+get
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:
+
+    {
+     state:1,
+     FaQ:[FaQ]     
+    }
+
+    ____________________________________________________________________________________________________________________________
+
+    _______________________________________________________________________________________
+
+post delete product                                //you can only delete product if it's bidStatus = 'binding' only
+                                                    //then u can delete it after the bid or if totalBids < price
+
+URL/shop/product/delete            
+
+request:
+
+POST
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+body
+{
+    productId:id
+}
+
+res:
+{state:1,message:'product deleted!!'}
+
+
+
+____________________________________________________________________________________________________________________________
+    _______________________________________________________________________________________
+
+post delete order                                //you can only delete order only if no one pay for details 
+                                                 // pay = false
+
+URL/shop/order/delete            
+
+request:
+
+POST
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+body
+{
+    orderId:id
+}
+
+res:
+{state:1,message:'product deleted!!'}
+
+
+
+____________________________________________________________________________________________________________________________
+
+
+    _______________________________________________________________________________________
+
+get ads                               
+            
+URL/ads/<filter>                    //filter = 1 => ads
+                                    //filter = 2 => delivery
+                                    //filter = 3 => helth
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+
+res:
+{state:1,ads:ads}
+
+
+
+____________________________________________________________________________________________________________________________
+
+post lost                               
+            
+URL/lost                            
+
+
+request:
+
+POST
+body{
+    desc:String,
+    phone:String,
+    found:'0'||'1'
+    image:file
+}
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+
+res:
+{
+    state:1,
+    message:'created'
+    l:lost
+}
+
+
+
+____________________________________________________________________________________________________________________________
+
+____________________________________________________________________________________________________________________________
+
+get lost                               
+            
+URL/lost?filter=<option>&page=<pageNumber>                             //filter = 1 ==> found:true
+                                                                        //filter = 2 ==> found:false                           
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+
+res:
+{
+    state:1,
+    lost:lost
+    total:totalLost
+}
+
+
+
+____________________________________________________________________________________________________________________________
+
+
+delete lost                               
+            
+URL/lost                                                                                           
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+body{
+    "lostId":id
+}
+
+res:
+{
+    
+    "state": 1,
+    "message": "deleted"
+}
+
+____________________________________________________________________________________________________________________________
+
+
+user get notfication                               
+            
+URL/user/notification?page=<pageNumber>                                                                                      
+
+request:
+
+GET
+
+headers:
+{
+    Authorization:hello <token>           "the space after 'hello' must be provided"
+}
+
+res:    
+    {
+        state:1,
+        Notifications:userNotfi,
+        totalNotfi:totalNotfi
+        }
+
+socket event : ==> 'notfication',{
+                    action:'notfication',
+                    userId:Id,
+                    notfications:{
+                        data:data,
+                        notification:notification
+                    }
+                }
+
+
